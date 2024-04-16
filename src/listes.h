@@ -34,12 +34,12 @@ cellule_t* nouvelleCellule (void);
 void detruireCellule (cellule_t*);
 void detruireSequence (sequence_t* seq);
 
-void conversion (char *texte, sequence_t *seq);
-void conversionTete(char *texte, sequence_t *seq);
+/*void conversion (char *texte, sequence_t *seq);*/
+void ajouter_sequence(int val, char op, sequence_t *seq);
 
-void afficher (sequence_t* seq);
+void afficher_sequence(sequence_t* seq);
 
-bool prendreTete(sequence_t* seq, char *c);
+/*bool prendreTete(sequence_t* seq, char *c);*/
 
 #define N_MAX_PILE 1
 

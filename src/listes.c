@@ -35,23 +35,23 @@ void detruireSequence(sequence_t* seq)
 }
 
 
-void conversion(char *texte, sequence_t *seq)
-{
-	cellule_t *cel;
-	if (texte[0]) {
-		seq->tete = nouvelleCellule();
-		seq->tete->command = texte[0];
-		cel = seq->tete;
-		for (int i = 1; texte[i]; i++) {
-			cel->suivant = nouvelleCellule();
-			cel = cel->suivant;
-			cel->command = texte[i];
-		}
-		cel->suivant = NULL;
-	} else {
-		seq->tete = NULL;
-	}
-}
+/*void conversion(char *texte, sequence_t *seq)*/
+/*{*/
+/*	cellule_t *cel;*/
+/*	if (texte[0]) {*/
+/*		seq->tete = nouvelleCellule();*/
+/*		seq->tete->command = texte[0];*/
+/*		cel = seq->tete;*/
+/*		for (int i = 1; texte[i]; i++) {*/
+/*			cel->suivant = nouvelleCellule();*/
+/*			cel = cel->suivant;*/
+/*			cel->command = texte[i];*/
+/*		}*/
+/*		cel->suivant = NULL;*/
+/*	} else {*/
+/*		seq->tete = NULL;*/
+/*	}*/
+/*}*/
 
 
 void ajouter_sequence(int val, char op, sequence_t *seq)
@@ -65,28 +65,31 @@ void ajouter_sequence(int val, char op, sequence_t *seq)
 }
 
 
-void afficher(sequence_t* seq)
+void afficher_sequence(sequence_t* seq)
 {
     assert(seq); /* Le pointeur doit être valide */
     cellule_t *cel = seq->tete;
     while (cel) {
-    	printf("%c", cel->command);
+    	if (cel->op)
+    		printf("%c", cel->op);
+    	else
+    		printf("%d", cel->val);
     	cel = cel->suivant;
     }
 }
 
 
-bool prendreTete(sequence_t* seq, char *c)
-{
-	// assert(seq); /* Le pointeur doit être valide */
-	if (seq == NULL)
-		return false;
-	*c = seq->tete->command;
-	cellule_t *cel = seq->tete->suivant;
-	detruireCellule(seq->tete);
-	seq->tete = cel;
-	return true;
-}
+/*bool prendreTete(sequence_t* seq, char *c)*/
+/*{*/
+/*	// assert(seq); // Le pointeur doit être valide*/
+/*	if (seq == NULL)*/
+/*		return false;*/
+/*	*c = seq->tete->command;*/
+/*	cellule_t *cel = seq->tete->suivant;*/
+/*	detruireCellule(seq->tete);*/
+/*	seq->tete = cel;*/
+/*	return true;*/
+/*}*/
 
 // Ajout pile
 void creer_pile(pile_t *p)
