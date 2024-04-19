@@ -2,28 +2,16 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include "regle3.h"
 
-int
-main(int argc, char *argv[])
+void
+regle3_n(int64_t n, FILE *output)
 {
-    int64_t n;
-    int64_t k;
-    int64_t j;
-    int64_t jmax;
-    int64_t i;
-    int64_t imax;
-    int64_t x1, x2;
+    int64_t i, j, k, x1, x2;
+    int64_t imax = 1 << n;
+    int64_t jmax = 1 << n;
     
-    if (argc != 2) {
-    	fprintf(stderr, "Usage: %s n\n", argv[0]);
-    	exit(EXIT_FAILURE);
-    }
-    
-    sscanf(argv[1], "%" PRId64, &n);
     assert(n < 32 && (n & 1) == 0);
-    
-    jmax = 1 << n;
     
     for (k = 1; k < n; k++) {
         for (j = 0; j < jmax; j++) {
@@ -34,13 +22,11 @@ main(int argc, char *argv[])
                     x1 *= -1;
                     x2 *= -1;
                 }
-                printf("%" PRId64 " %" PRId64 " ", x1, x2);
+                fprintf(output, "%" PRId64 " %" PRId64 " ", x1, x2);
             }
-            printf("%d\n", 0);
+            fprintf(output, "0\n");
         }
     }
-    
-    imax = 1 << n;
     
     for (k = 1; k < n; k++) {
         for (i = 0; i < imax; i++) {
@@ -51,11 +37,9 @@ main(int argc, char *argv[])
                     x1 *= -1;
                     x2 *= -1;
                 }
-                printf("%" PRId64 " %" PRId64 " ", x1, x2);
+                fprintf(output, "%" PRId64 " %" PRId64 " ", x1, x2);
             }
-            printf("%d\n", 0);
+            fprintf(output, "0\n");
         }
     }
-
-    return 0;
 }

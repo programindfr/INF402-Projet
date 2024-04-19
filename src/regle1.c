@@ -2,7 +2,7 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include "regle1.h"
 #include "stack_t.h"
 
 void
@@ -15,6 +15,14 @@ void
 clear_bit(int64_t *x, int64_t kthBit)
 {
 	*x &= ~(1 << kthBit);
+}
+
+void
+ensemble_create(stack_t *stack, int64_t n)
+{
+	stack_init(stack);
+    stack_push(stack, 0);
+    ensemble_fill(stack, 0, 0, 0, n);
 }
 
 void
@@ -45,50 +53,32 @@ ensemble_fill(stack_t *stack, int64_t index, int64_t kthBit, int64_t temperature
 	}
 }
 
-int
-main(int argc, char *argv[])
+void
+regle1_n(int64_t n, stack_t *stack, FILE *output)
 {
-    int64_t n;
-    int64_t e;
-    int64_t i;
-    int64_t j;
-    int64_t k;
-    int64_t x;
-    stack_t stack;
+    int64_t e, i, j, k, x;
     
-    if (argc != 2) {
-    	fprintf(stderr, "Usage: %s n\n", argv[0]);
-    	exit(EXIT_FAILURE);
-    }
-    
-    sscanf(argv[1], "%" PRId64, &n);
     assert(n < 32 && (n & 1) == 0);
     
-    stack_init(&stack);
-    stack_push(&stack, 0);
-    ensemble_fill(&stack, 0, 0, 0, n);
-    
-    for (e = 0; e < stack.pos; e++) {
+    for (e = 0; e < stack->pos; e++) {
     	for (i = 0; i < n; i++) {
     		for (k = 0; k < n; k++) {
     			x = i*n + (k+1);
-                if (!((stack.array[e] >> k) & 1))
+                if (!((stack->array[e] >> k) & 1))
                     x *= -1;
-                printf("%" PRId64 " ", x);
+                fprintf(output, "%" PRId64 " ", x);
     		}
-    		printf("0\n");
+    		fprintf(output, "0\n");
     	}
     	
     	for (j = 0; j < n; j++) {
     		for (k = 0; k < n; k++) {
     			x = k*n + (j+1);
-                if (!((stack.array[e] >> k) & 1))
+                if (!((stack->array[e] >> k) & 1))
                     x *= -1;
-                printf("%" PRId64 " ", x);
+                fprintf(output, "%" PRId64 " ", x);
     		}
-    		printf("0\n");
+    		fprintf(output, "0\n");
     	}
     }
-
-    return 0;
 }
