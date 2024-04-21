@@ -39,3 +39,13 @@ stack_t.o: $(SRC)/stack_t.c $(SRC)/stack_t.h
 # clean
 clean:
 	rm -rf *.o $(EXEC)
+
+venv:
+	python3 -m venv venv
+	python -m venv --upgrade --upgrade-deps venv
+	cp $(SRC)/interp.py venv
+
+run:
+	source ./venv/bin/activate
+	python3 interp.py
+	deactivate
