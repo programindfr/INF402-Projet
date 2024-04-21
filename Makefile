@@ -2,50 +2,45 @@ CC = gcc -Wall -pedantic -O3
 EXEC = takuzu
 SRC = src
 TEST = test
+BUILD = build
+VENV = $(BUILD)/venv
 
 
 
-# executables
-all: $(EXEC)
+all: mkbuild $(EXEC)
 
-takuzu: takuzu.o regle1.o regle2.o regle3.o stack_t.o
+release: all venv
+
+takuzu: $(BUILD)/takuzu.o $(BUILD)/regle1.o $(BUILD)/regle2.o $(BUILD)/regle3.o $(BUILD)/stack_t.o
 	$(CC) $^ -o takuzu
 
+%/takuzu.o: $(SRC)/takuzu.c
+	$(CC) -c $< -o $@
 
+%/regle1.o: $(SRC)/regle1.c $(SRC)/regle1.h $(SRC)/stack_t.h
+	$(CC) -c $< -o $@
 
-# .o
-# takuzu.o
-takuzu.o: $(SRC)/takuzu.c
-	$(CC) -c $(SRC)/takuzu.c
+%/regle2.o: $(SRC)/regle2.c $(SRC)/regle2.h
+	$(CC) -c $< -o $@
 
-# regle1.o
-regle1.o: $(SRC)/regle1.c $(SRC)/regle1.h $(SRC)/stack_t.h
-	$(CC) -c $(SRC)/regle1.c
+%/regle3.o: $(SRC)/regle3.c $(SRC)/regle3.h
+	$(CC) -c $< -o $@
 
-# regle2.o
-regle2.o: $(SRC)/regle2.c $(SRC)/regle2.h
-	$(CC) -c $(SRC)/regle2.c
-
-# regle3.o
-regle3.o: $(SRC)/regle3.c $(SRC)/regle3.h
-	$(CC) -c $(SRC)/regle3.c
-
-# stack_t.o
-stack_t.o: $(SRC)/stack_t.c $(SRC)/stack_t.h
-	$(CC) -c $(SRC)/stack_t.c
+%/stack_t.o: $(SRC)/stack_t.c $(SRC)/stack_t.h
+	$(CC) -c $< -o $@
 
 
 
-# clean
 clean:
-	rm -rf *.o $(EXEC)
+	rm -rf $(EXEC) $(BUILD)
+
+mkbuild:
+	mkdir -p $(BUILD)
 
 venv:
-	python3 -m venv venv
-	python -m venv --upgrade --upgrade-deps venv
-	cp $(SRC)/interp.py venv
+	python3 -m venv $(VENV)
+	python3 -m venv --upgrade --upgrade-deps $(VENV)
+	./$(VENV)/bin/python3 -m pip install tk
 
 run:
-	source ./venv/bin/activate
-	python3 interp.py
-	deactivate
+	./$(VENV)/bin/python3 $(SRC)/takuzu_gui.py
