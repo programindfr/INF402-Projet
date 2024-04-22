@@ -32,7 +32,9 @@ stack_size(stack_t *stack)
 
 void
 stack_print(stack_t *stack) {
-	for (int64_t i = 0; i < stack->pos; i++)
+	int64_t i;
+	
+	for (i = 0; i < stack->pos; i++)
 		printf("%" PRId64 " ", stack->array[i]);
 }
 

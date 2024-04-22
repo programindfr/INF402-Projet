@@ -1,4 +1,5 @@
 import tkinter as tk
+from subprocess import run
 
 class affichage_grille:
 	def __init__(self, master, lignes=2, colonnes=2):
@@ -7,6 +8,7 @@ class affichage_grille:
 		self.colonnes = colonnes
 		self.frame = tk.Frame(self.master)
 		self.reset_all()
+		self.confirmation = False
 
 	def clicker(self, i, j):
 		bouton = self.boutons[i][j]
@@ -16,6 +18,10 @@ class affichage_grille:
 			bouton["text"] = "1"
 		else:
 			bouton["text"] = " "
+		
+		if self.confirmation:
+			self.envoie_bouton["text"]= "Envoyer"
+			self.confirmation = False
 
 	def recuperer_grille(self):
 		grille = []
@@ -27,12 +33,25 @@ class affichage_grille:
 		return grille
 
 	def envoie(self):
-		self.grille = self.recuperer_grille()
-		with open('grille.txt', 'w') as f:
-			f.write(str(self.lignes) + '\n')
-			for row in self.grille:
-				f.write(''.join('#' if cell == ' ' else cell for cell in row) + '\n') #'vide' if cell == ' ' else cell for cell in row
-		root.quit()
+		if not self.confirmation:
+			self.envoie_bouton["text"]= "Confirmer ?"
+			self.confirmation = True
+		else:
+			self.envoie_bouton["text"]= "Calcul..."
+			self.master.update()
+
+			self.grille = self.recuperer_grille()
+			with open(f'n{self.lignes}.takuzu', 'w') as f:
+				f.write(str(self.lignes) + '\n')
+				for row in self.grille:
+					f.write(''.join('#' if cell == ' ' else cell for cell in row) + '\n')
+			run(f"./takuzu n{self.lignes}", shell=True, check=True)
+			self.afficher_sol(f'n{self.lignes}_sol.takuzu')
+
+			self.envoie_bouton["text"]="Résultat"
+			self.confirmation = False
+
+		
 	
 	def plus(self):
 		if self.lignes < 16:
@@ -65,12 +84,30 @@ class affichage_grille:
 		self.moins_bouton = tk.Button(self.frame, text="-", command=self.moins)
 		self.moins_bouton.grid(row=self.lignes, column=0, columnspan=1)
 		
-		self.envoie_bouton = tk.Button(self.frame, text="envoie", command=self.envoie)
+		self.envoie_bouton = tk.Button(self.frame, text="Envoyer", command=self.envoie)
 		self.envoie_bouton.grid(row=self.lignes, column=1, columnspan=2)
 		
 		self.plus_bouton = tk.Button(self.frame, text="+", command=self.plus)
 		self.plus_bouton.grid(row=self.lignes, column=3, columnspan=1)
 
+
+
+
+	def afficher_sol(self, f):
+		with open(f, 'r') as f:
+			lines = f.readlines()
+		n = int(lines[0].strip())
+		sol = [list(line.strip()) for line in lines[1:]]
+
+		self.lignes = self.colonnes = n
+		self.reset_all()
+
+		for i in range(n):
+			for j in range(n):
+				self.boutons[i][j]["text"] = ' ' if sol[i][j] == '#' else sol[i][j]
+
+
 root = tk.Tk()
 grid = affichage_grille(root)
 root.mainloop()
+root.quit()

@@ -11,7 +11,7 @@ regle3_n(int64_t n, FILE *output)
     int64_t imax = 1 << n;
     int64_t jmax = 1 << n;
     
-    assert(n < 32 && (n & 1) == 0);
+    assert(n > 0 && n < 32 && (n & 1) == 0);
     
     for (k = 1; k < n; k++) {
         for (j = 0; j < jmax; j++) {

@@ -1,4 +1,5 @@
-CC = gcc -Wall -pedantic -O3
+#CC = gcc -Wall -pedantic -O3
+CC = gcc -Wall -pedantic -g
 EXEC = takuzu
 SRC = src
 TEST = test
@@ -32,7 +33,7 @@ takuzu: $(BUILD)/takuzu.o $(BUILD)/regle1.o $(BUILD)/regle2.o $(BUILD)/regle3.o 
 
 
 clean:
-	rm -rf $(EXEC) $(BUILD)
+	rm -rf *.dimacs *.takuzu $(EXEC) $(BUILD)
 
 mkbuild:
 	mkdir -p $(BUILD)

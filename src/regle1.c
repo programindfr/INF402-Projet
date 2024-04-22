@@ -58,7 +58,7 @@ regle1_n(int64_t n, stack_t *stack, FILE *output)
 {
     int64_t e, i, j, k, x;
     
-    assert(n < 32 && (n & 1) == 0);
+    assert(n > 0 && n < 32 && (n & 1) == 0);
     
     for (e = 0; e < stack->pos; e++) {
     	for (i = 0; i < n; i++) {

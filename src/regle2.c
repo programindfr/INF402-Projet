@@ -9,7 +9,7 @@ regle2_n(int64_t n, FILE *output)
 {
     int64_t i, j, k;
 	
-    assert(n < 32 && (n & 1) == 0);
+    assert(n > 0 && n < 32 && (n & 1) == 0);
     
     for (i = 0; i < (n-2); i++) {
     	for (j = 0; j < (n-2); j++) {
