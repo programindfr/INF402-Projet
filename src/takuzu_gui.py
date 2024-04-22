@@ -41,12 +41,12 @@ class affichage_grille:
 			self.master.update()
 
 			self.grille = self.recuperer_grille()
-			with open(f'n{self.lignes}.takuzu', 'w') as f:
+			with open(f'build/n{self.lignes}.takuzu', 'w') as f:
 				f.write(str(self.lignes) + '\n')
 				for row in self.grille:
 					f.write(''.join('#' if cell == ' ' else cell for cell in row) + '\n')
-			run(f"./takuzu n{self.lignes}", shell=True, check=True)
-			self.afficher_sol(f'n{self.lignes}_sol.takuzu')
+			run(f"./build/takuzu build/n{self.lignes}", shell=True, check=True)
+			self.afficher_sol(f'build/n{self.lignes}_sol.takuzu')
 
 			self.envoie_bouton["text"]="Résultat"
 			self.confirmation = False

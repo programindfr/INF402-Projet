@@ -14,7 +14,7 @@ all: mkbuild $(EXEC)
 release: all venv
 
 takuzu: $(addprefix $(BUILD)/, takuzu.o regle1.o regle2.o regle3.o stack_t.o)
-	$(CC) $^ -o takuzu
+	$(CC) $^ -o $(BUILD)/takuzu
 
 %/takuzu.o: $(SRC)/takuzu.c
 	$(CC) -c $< -o $@ $(CCFLAGS)
@@ -34,15 +34,17 @@ takuzu: $(addprefix $(BUILD)/, takuzu.o regle1.o regle2.o regle3.o stack_t.o)
 
 
 clean:
-	rm -rf *.dimacs *.takuzu $(EXEC) $(BUILD)
+	rm -rf $(BUILD)
 
 mkbuild:
 	@mkdir -p $(BUILD)
 
 venv:
-	python3 -m venv $(VENV)
-	python3 -m venv --upgrade --upgrade-deps $(VENV)
-	./$(VENV)/bin/python3 -m pip install tk
+	@echo Setting up python virtual env ...
+	@python3 -m venv $(VENV)
+	@python3 -m venv --upgrade --upgrade-deps $(VENV)
+	@./$(VENV)/bin/python3 -m pip install tk
+	@echo Done
 
 run:
-	./$(VENV)/bin/python3 $(SRC)/takuzu_gui.py
+	@./$(VENV)/bin/python3 $(SRC)/takuzu_gui.py
