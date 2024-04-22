@@ -1,10 +1,11 @@
-#CC = gcc -Wall -pedantic -O3
-CC = gcc -Wall -pedantic -g
+CC = gcc -Wall -pedantic -O3
 EXEC = takuzu
 SRC = src
 TEST = test
 BUILD = build
 VENV = $(BUILD)/venv
+INCLUDE = $(SRC)/include
+CCFLAGS = -I $(INCLUDE)
 
 
 
@@ -12,23 +13,23 @@ all: mkbuild $(EXEC)
 
 release: all venv
 
-takuzu: $(BUILD)/takuzu.o $(BUILD)/regle1.o $(BUILD)/regle2.o $(BUILD)/regle3.o $(BUILD)/stack_t.o
+takuzu: $(addprefix $(BUILD)/, takuzu.o regle1.o regle2.o regle3.o stack_t.o)
 	$(CC) $^ -o takuzu
 
 %/takuzu.o: $(SRC)/takuzu.c
-	$(CC) -c $< -o $@
+	$(CC) -c $< -o $@ $(CCFLAGS)
 
-%/regle1.o: $(SRC)/regle1.c $(SRC)/regle1.h $(SRC)/stack_t.h
-	$(CC) -c $< -o $@
+%/regle1.o: $(SRC)/regle1.c $(INCLUDE)/regle1.h $(INCLUDE)/stack_t.h
+	$(CC) -c $< -o $@ $(CCFLAGS)
 
-%/regle2.o: $(SRC)/regle2.c $(SRC)/regle2.h
-	$(CC) -c $< -o $@
+%/regle2.o: $(SRC)/regle2.c $(INCLUDE)/regle2.h
+	$(CC) -c $< -o $@ $(CCFLAGS)
 
-%/regle3.o: $(SRC)/regle3.c $(SRC)/regle3.h
-	$(CC) -c $< -o $@
+%/regle3.o: $(SRC)/regle3.c $(INCLUDE)/regle3.h
+	$(CC) -c $< -o $@ $(CCFLAGS)
 
-%/stack_t.o: $(SRC)/stack_t.c $(SRC)/stack_t.h
-	$(CC) -c $< -o $@
+%/stack_t.o: $(SRC)/stack_t.c $(INCLUDE)/stack_t.h
+	$(CC) -c $< -o $@ $(CCFLAGS)
 
 
 
@@ -36,7 +37,7 @@ clean:
 	rm -rf *.dimacs *.takuzu $(EXEC) $(BUILD)
 
 mkbuild:
-	mkdir -p $(BUILD)
+	@mkdir -p $(BUILD)
 
 venv:
 	python3 -m venv $(VENV)
