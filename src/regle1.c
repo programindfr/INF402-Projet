@@ -2,8 +2,9 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "regle1.h"
-#include "stack_t.h"
+
+#include <regle1.h>
+#include <stack_t.h>
 
 void
 set_bit(int64_t *x, int64_t kthBit)

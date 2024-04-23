@@ -2,7 +2,8 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "regle3.h"
+
+#include <regle3.h>
 
 void
 regle3_n(int64_t n, FILE *output)

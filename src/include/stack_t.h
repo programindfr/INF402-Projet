@@ -18,6 +18,7 @@ int64_t stack_top(stack_t *stack);
 int64_t stack_size(stack_t *stack);
 void stack_print(stack_t *stack);
 
+void stack_free(stack_t *stack);
 void stack_empty(stack_t *stack);
 void stack_push(stack_t *stack, int64_t x);
 int64_t stack_pop(stack_t *stack);

@@ -2,7 +2,8 @@
 #define __REGLE1_H__
 
 #include <stdint.h>
-#include "stack_t.h"
+
+#include <stack_t.h>
 
 void set_bit(int64_t *x, int64_t kthBit);
 void clear_bit(int64_t *x, int64_t kthBit);

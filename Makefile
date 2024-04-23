@@ -2,19 +2,19 @@ CC = gcc -Wall -pedantic -O3
 EXEC = takuzu
 SRC = src
 TEST = test
-BUILD = build
-VENV = $(BUILD)/venv
+DIST = dist
+VENV = $(DIST)/venv
 INCLUDE = $(SRC)/include
 CCFLAGS = -I $(INCLUDE)
 
 
 
-all: mkbuild $(EXEC)
+all: mkdir $(EXEC)
 
-release: all venv
+build: all venv
 
-takuzu: $(addprefix $(BUILD)/, takuzu.o regle1.o regle2.o regle3.o stack_t.o)
-	$(CC) $^ -o $(BUILD)/takuzu
+takuzu: $(addprefix $(DIST)/, takuzu.o regle1.o regle2.o regle3.o stack_t.o)
+	$(CC) $^ -o $(DIST)/takuzu
 
 %/takuzu.o: $(SRC)/takuzu.c
 	$(CC) -c $< -o $@ $(CCFLAGS)
@@ -34,10 +34,10 @@ takuzu: $(addprefix $(BUILD)/, takuzu.o regle1.o regle2.o regle3.o stack_t.o)
 
 
 clean:
-	rm -rf $(BUILD)
+	rm -rf $(DIST)
 
-mkbuild:
-	@mkdir -p $(BUILD)
+mkdir:
+	@mkdir -p $(DIST)
 
 venv:
 	@echo Setting up python virtual env ...

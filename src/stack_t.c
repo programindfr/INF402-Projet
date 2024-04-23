@@ -2,7 +2,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "stack_t.h"
+
+#include <stack_t.h>
 
 void
 stack_init(stack_t *stack)
@@ -39,9 +40,15 @@ stack_print(stack_t *stack) {
 }
 
 void
-stack_empty(stack_t *stack)
+stack_free(stack_t *stack)
 {
 	free(stack->array);
+}
+
+void
+stack_empty(stack_t *stack)
+{
+	stack_free(stack);
 	stack_init(stack);
 }
 

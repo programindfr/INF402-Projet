@@ -3,10 +3,11 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "regle1.h"
-#include "regle2.h"
-#include "regle3.h"
-#include "stack_t.h"
+
+#include <regle1.h>
+#include <regle2.h>
+#include <regle3.h>
+#include <stack_t.h>
 
 void
 usage(char argv0[])
@@ -162,7 +163,7 @@ main(int argc, char *argv[])
 	nClause =
 		nFix						// Nombre de variables fixes
 		+ stack_size(&stack)*2*n	// Nombre de clauses pour la regle 1
-		+ (n-2)*(n-2)*4				// Nombre de clauses pour la regle 2
+		+ (n-2)*n*4				// Nombre de clauses pour la regle 2
 		+ 2*(n-1)*(1 << n);			// Nombre de clauses pour la regle 3
 	
 	fprintf(outputDimacs, "p cnf %" PRId64 " %" PRId64 "\n", nVar, nClause);
@@ -171,6 +172,7 @@ main(int argc, char *argv[])
 	regle3_n(n, outputDimacs);
 	grid_print(grid, n, outputDimacs);
 	
+	stack_free(&stack);
 	fclose(inputTakuzu);
 	fclose(outputDimacs);
 	
