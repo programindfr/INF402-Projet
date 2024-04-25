@@ -124,10 +124,11 @@ dimacs_to_takuzu(FILE *input, FILE *output, int64_t *grid[], int64_t n)
 int
 main(int argc, char *argv[])
 {
-	char	satExec[256], file[256];
-	int64_t	n, nVar, nClause, nFix;
-	int64_t	**grid;
-	stack_t	stack;
+	char		satExec[256], file[256];
+	int64_t		n, nVar, nFix;
+	int64_t		**grid;
+	stack_t		stack;
+	uint64_t	nClause;
 	
 	if (argc != 2) {				// 1 argument: input-file
 		usage(argv[0]);
@@ -161,12 +162,12 @@ main(int argc, char *argv[])
 	ensemble_create(&stack, n);
 	nVar = n*n;
 	nClause =
-		nFix						// Nombre de variables fixes
-		+ stack_size(&stack)*2*n	// Nombre de clauses pour la regle 1
-		+ (n-2)*n*4				// Nombre de clauses pour la regle 2
-		+ 2*(n-1)*(1 << n);			// Nombre de clauses pour la regle 3
+		nFix							// Nombre de variables fixes
+		+ stack_size(&stack)*2*n		// Nombre de clauses pour la regle 1
+		+ (n-2)*n*4						// Nombre de clauses pour la regle 2
+		+ n*(n-1)*(1 << n);				// Nombre de clauses pour la regle 3; 2 * ( n*(n-1) / 2 ) * (1 << 2)
 	
-	fprintf(outputDimacs, "p cnf %" PRId64 " %" PRId64 "\n", nVar, nClause);
+	fprintf(outputDimacs, "p cnf %" PRId64 " %" PRIu64 "\n", nVar, nClause);
 	regle1_n(n, &stack, outputDimacs);
 	regle2_n(n, outputDimacs);
 	regle3_n(n, outputDimacs);
