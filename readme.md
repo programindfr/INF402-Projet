@@ -42,9 +42,9 @@ Un environnement virtuel python est créé, préservant ainsi votre configuratio
 
 - python3
 
-- python3-tk
+- python3-tk (tkinter)
 
-- minisat
+- minisat (<http://minisat.se/>)
 
 - valgrind (optionnel)
 
@@ -66,7 +66,10 @@ make run
 
 # Exécutable CLI
 ./dist/takuzu input-file [-s]
+# Exemples
+./dist/takuzu test/n4 -s
+./dist/takuzu test/n10
 
 # Tests CLI
-./dist/test
+make run-test
 ```

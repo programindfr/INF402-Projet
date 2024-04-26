@@ -54,3 +54,6 @@ venv:
 
 run:
 	@./$(VENV)/bin/python3 $(SRC)/takuzu_gui.py
+
+run-test:
+	@./$(DIST)/test
