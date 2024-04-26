@@ -12,6 +12,8 @@ class affichage_grille:
 		self.lignes = lignes
 		self.colonnes = colonnes
 		self.frame = tk.Frame(self.master)
+		self.sat = " -s"
+		self.satState = "on"
 		self.reset_all()
 		self.confirmation = False
 	
@@ -58,8 +60,9 @@ class affichage_grille:
 				f.write(str(self.lignes) + '\n')
 				for row in self.grille:
 					f.write(''.join('#' if cell == ' ' else cell for cell in row) + '\n')
-			run(f"./dist/takuzu dist/n{self.lignes}", shell=True, check=True)
-			self.afficher_sol(f'dist/n{self.lignes}_sol.takuzu')
+			run(f"./dist/takuzu dist/n{self.lignes}{self.sat}", shell=True, check=True)
+			if self.satState == "on":
+				self.afficher_sol(f'dist/n{self.lignes}_sol.takuzu')
 
 			self.envoie_bouton["text"]="Résultat"
 			self.confirmation = False
@@ -77,6 +80,15 @@ class affichage_grille:
 			self.lignes -= 2
 			self.colonnes -= 2
 			self.reset_all()
+	
+	def satSwitch(self):
+		if self.satState == "on":
+			self.sat = ""
+			self.satState = "off"
+		elif self.satState == "off":
+			self.sat = " -s"
+			self.satState = "on"
+		self.sat_bouton["text"] = f"sat: {self.satState}"
 	
 	def afficher_grille(self):
 		# La fonction afficher_grille permet d'afficher la grille de takuzu
@@ -108,6 +120,9 @@ class affichage_grille:
 		
 		self.plus_bouton = tk.Button(self.frame, text="+", command=self.plus)
 		self.plus_bouton.grid(row=self.lignes, column=3, columnspan=1)
+		
+		self.sat_bouton = tk.Button(self.frame, text=f"sat: {self.satState}", command=self.satSwitch)
+		self.sat_bouton.grid(row=self.lignes, column=4, columnspan=2)
 	
 	def afficher_sol(self, f):
 		# La fonction afficher_sol permet d'afficher la solution du takuzu

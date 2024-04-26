@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <regle1.h>
 #include <regle2.h>
@@ -21,8 +22,9 @@ usage(char argv0[])
 {
 	fprintf(
 		stderr,
-		"Usage: %s input-file\n\n"
-		"\tinput-file: nom de fichier takuzu sans l'extension\n",
+		"Usage: %s input-file [-s]\n\n"
+		"\tinput-file: nom de fichier takuzu sans l'extension\n"
+		"\t-s: cherche un modèle via le SAT-solveur\n",
 		argv0
 	);
 }
@@ -184,10 +186,15 @@ main(int argc, char *argv[])
 	stack_t		stack;
 	uint64_t	nClause;
 	
-	if (argc != 2) {				// 1 argument: input-file
+	if (argc < 2 || argc > 3) {			// 2 arguments: input-file [-s]
 		usage(argv[0]);
 		exit(EXIT_FAILURE);
 	}
+	if (argc == 3) {
+	if (strcmp(argv[2], "-s") != 0) {	// Présence de l'option -s
+		usage(argv[0]);
+		exit(EXIT_FAILURE);
+	}}
 	
 
 	// Ouverture et lecture des fichiers
@@ -237,28 +244,31 @@ main(int argc, char *argv[])
 	fclose(outputDimacs);
 	
 
-// Résolution du problème SAT
-	snprintf(satExec, sizeof(satExec), "minisat %s.dimacs %s_sol.dimacs", argv[1], argv[1]);
-	system(satExec);
-	
-	snprintf(file, sizeof(file), "%s_sol.takuzu", argv[1]);
-	FILE *outputTakuzu = fopen(file, "w");
-	if (outputTakuzu == NULL) {			// Erreur d'ouverture du fichier
-		usage(argv[0]);
-		exit(EXIT_FAILURE);
+// Résolution du problème SAT si option -s
+	if (argc == 3) {
+		snprintf(satExec, sizeof(satExec), "minisat %s.dimacs %s_sol.dimacs", argv[1], argv[1]);
+		system(satExec);
+		
+		snprintf(file, sizeof(file), "%s_sol.takuzu", argv[1]);
+		FILE *outputTakuzu = fopen(file, "w");
+		if (outputTakuzu == NULL) {			// Erreur d'ouverture du fichier
+			usage(argv[0]);
+			exit(EXIT_FAILURE);
+		}
+		
+		snprintf(file, sizeof(file), "%s_sol.dimacs", argv[1]);
+		FILE *inputDimacs = fopen(file, "r");
+		if (inputDimacs == NULL) {			// Erreur d'ouverture du fichier
+			usage(argv[0]);
+			exit(EXIT_FAILURE);
+		}
+		
+		dimacs_to_takuzu(inputDimacs, outputTakuzu, grid, n);
+		
+		fclose(inputDimacs);
+		fclose(outputTakuzu);
 	}
 	
-	snprintf(file, sizeof(file), "%s_sol.dimacs", argv[1]);
-	FILE *inputDimacs = fopen(file, "r");
-	if (inputDimacs == NULL) {			// Erreur d'ouverture du fichier
-		usage(argv[0]);
-		exit(EXIT_FAILURE);
-	}
-	
-	dimacs_to_takuzu(inputDimacs, outputTakuzu, grid, n);
-	
-	fclose(inputDimacs);
-	fclose(outputTakuzu);
 	grid_free(grid, n);
 	
 	return 0;
