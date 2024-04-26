@@ -9,12 +9,26 @@
 #include <regle3.h>
 #include <stack_t.h>
 
+/*
+La fonction usage prend en parametre un tableau de caractères argv0.
+Elle affiche un message d'erreur indiquant comment utiliser le programme.
+
+parametre
+	argv0: tableau de caractères
+*/
 void
 usage(char argv0[])
 {
 	fprintf(stderr, "Usage: %s input-file\n", argv0);
 }
 
+/*
+La fonction grid_alloc alloue dynamiquement un tableau 2D de taille n x n et renvoie un pointeur vers ce tableau.
+paramètres:
+	n: taille du tableau
+retour:
+	Un pointeur vers le tableau alloué dynamiquement
+*/
 int64_t **
 grid_alloc(int64_t n)
 {
@@ -29,6 +43,12 @@ grid_alloc(int64_t n)
 	return grid;
 }
 
+/*
+La fonction grid_free libère la mémoire allouée dynamiquement pour le tableau 2D grid.
+paramètres:
+	grid: tableau 2D à libérer
+	n: taille du tableau
+*/
 void
 grid_free(int64_t *grid[], int64_t n)
 {
@@ -42,6 +62,18 @@ grid_free(int64_t *grid[], int64_t n)
 	free(grid);
 }
 
+
+/*
+La fonction grid_fill remplit le tableau 2D grid à partir d'un fichier d'entrée.
+Elle lit les caractères du fichier et assigne les valeurs correspondantes dans le tableau.
+Elle renvoie le nombre de variables fixes dans le tableau.
+paramètres:
+	grid: tableau 2D à remplir
+	n: taille du tableau
+	input: fichier d'entrée
+retour:
+	Le nombre de variables fixes dans le tableau
+*/
 int64_t
 grid_fill(int64_t *grid[], int64_t n, FILE *input)
 {
@@ -77,6 +109,14 @@ grid_fill(int64_t *grid[], int64_t n, FILE *input)
 	return nFix;
 }
 
+/*
+La fonction grid_print affiche le contenu du tableau 2D grid dans le fichier de sortie.
+Elle parcourt le tableau et écrit les valeurs non nulles dans le fichier, en utilisant le format DIMACS.
+paramètres:
+	grid: tableau 2D à afficher
+	n: taille du tableau
+	output: fichier de sortie
+*/
 void
 grid_print(int64_t *grid[], int64_t n, FILE *output)
 {
@@ -92,6 +132,15 @@ grid_print(int64_t *grid[], int64_t n, FILE *output)
 	}
 }
 
+/*
+La fonction dimacs_to_takuzu convertit un fichier DIMACS en un fichier takuzu.
+Elle lit les valeurs du fichier DIMACS et les écrit dans le fichier takuzu en utilisant le format spécifié.
+paramètres:
+	input: fichier DIMACS en entrée
+	output: fichier takuzu en sortie
+	grid: tableau 2D contenant les valeurs du takuzu
+	n: taille du tableau
+*/
 void
 dimacs_to_takuzu(FILE *input, FILE *output, int64_t *grid[], int64_t n)
 {
@@ -135,6 +184,8 @@ main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	
+
+	// Ouverture et lecture des fichiers
 	snprintf(file, 256, "%s.takuzu", argv[1]);
 	FILE *inputTakuzu = fopen(file, "r");
 	if (inputTakuzu == NULL) {			// Erreur d'ouverture du fichier
@@ -154,13 +205,15 @@ main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	
+
+	// Création des variables et clauses
 	assert(n > 0 && n < 32 && (n & 1) == 0);
 	
 	grid = grid_alloc(n);
 	nFix = grid_fill(grid, n, inputTakuzu);
 	
-	ensemble_create(&stack, n);
-	nVar = n*n;
+	ensemble_create(&stack, n); 
+	nVar = n*n;	
 	nClause =
 		nFix							// Nombre de variables fixes
 		+ stack_size(&stack)*2*n		// Nombre de clauses pour la regle 1
@@ -173,10 +226,13 @@ main(int argc, char *argv[])
 	regle3_n(n, outputDimacs);
 	grid_print(grid, n, outputDimacs);
 	
+	// Fermeture des fichiers
 	stack_free(&stack);
 	fclose(inputTakuzu);
 	fclose(outputDimacs);
 	
+
+// Résolution du problème SAT
 	snprintf(satExec, 256, "minisat %s.dimacs %s_sol.dimacs", argv[1], argv[1]);
 	system(satExec);
 	

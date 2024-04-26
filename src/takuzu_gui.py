@@ -2,6 +2,11 @@ import tkinter as tk
 from subprocess import run
 
 class affichage_grille:
+	
+	# Initialise les attributs de la classe
+	# - master : la fenêtre principale
+	# - lignes : le nombre de lignes de la grille (par défaut 2)
+	# - colonnes : le nombre de colonnes de la grille (par défaut 2)
 	def __init__(self, master, lignes=2, colonnes=2):
 		self.master = master
 		self.lignes = lignes
@@ -9,8 +14,10 @@ class affichage_grille:
 		self.frame = tk.Frame(self.master)
 		self.reset_all()
 		self.confirmation = False
-
+	
 	def clicker(self, i, j):
+		# La fonction clicker permet de changer l'état d'un bouton lorsqu'on clique dessus
+		# paramètres : i, j les coordonnées du bouton
 		bouton = self.boutons[i][j]
 		if bouton["text"] == " ":
 			bouton["text"] = "0"
@@ -22,8 +29,10 @@ class affichage_grille:
 		if self.confirmation:
 			self.envoie_bouton["text"]= "Envoyer"
 			self.confirmation = False
-
+	
 	def recuperer_grille(self):
+		# La fonction recuperer_grille permet de récupérer la grille actuelle à partir des boutons
+		# retourne : la grille sous forme de liste de listes
 		grille = []
 		for row in self.boutons:
 			grille_row = []
@@ -31,8 +40,12 @@ class affichage_grille:
 				grille_row.append(bouton["text"])
 			grille.append(grille_row)
 		return grille
-
+	
 	def envoie(self):
+		# La fonction envoie permet de lancer le calcul du takuzu
+		# Si le mode de confirmation n'est pas activé, change le texte du bouton en "Confirmer ?"
+		# Sinon, change le texte du bouton en "Calcul..."
+		# retourne : le résultat du takuzu
 		if not self.confirmation:
 			self.envoie_bouton["text"]= "Confirmer ?"
 			self.confirmation = True
@@ -50,22 +63,25 @@ class affichage_grille:
 
 			self.envoie_bouton["text"]="Résultat"
 			self.confirmation = False
-
-		
 	
 	def plus(self):
+		# Méthode appelée lorsqu'on clique sur le bouton "+"
 		if self.lignes < 16:
 			self.lignes += 2
 			self.colonnes += 2
 			self.reset_all()
 	
 	def moins(self):
+		# Méthode appelée lorsqu'on clique sur le bouton "-"
 		if self.lignes > 2:
 			self.lignes -= 2
 			self.colonnes -= 2
 			self.reset_all()
 	
 	def afficher_grille(self):
+		# La fonction afficher_grille permet d'afficher la grille de takuzu
+		# La grille est affichée sous forme de boutons
+		# retourne : la grille de takuzu
 		self.boutons = []
 		for i in range(self.lignes):
 			row = []
@@ -76,6 +92,9 @@ class affichage_grille:
 			self.boutons.append(row)
 	
 	def reset_all(self):
+		# La fonction reset_all permet de réinitialiser la grille
+		# La grille est détruite et recréée
+		# retourne : la grille de takuzu
 		self.frame.destroy()
 		self.frame = tk.Frame(self.master)
 		self.frame.pack()
@@ -89,11 +108,12 @@ class affichage_grille:
 		
 		self.plus_bouton = tk.Button(self.frame, text="+", command=self.plus)
 		self.plus_bouton.grid(row=self.lignes, column=3, columnspan=1)
-
-
-
-
+	
 	def afficher_sol(self, f):
+		# La fonction afficher_sol permet d'afficher la solution du takuzu
+		# paramètres : f le fichier contenant la solution du takuzu
+		# La solution est affichée dans la grille
+		# retourne : la solution du takuzu
 		with open(f, 'r') as f:
 			lines = f.readlines()
 		n = int(lines[0].strip())
@@ -106,8 +126,8 @@ class affichage_grille:
 			for j in range(n):
 				self.boutons[i][j]["text"] = ' ' if sol[i][j] == '#' else sol[i][j]
 
-
-root = tk.Tk()
-grid = affichage_grille(root)
-root.mainloop()
-root.quit()
+if __name__ == "__main__":
+	root = tk.Tk()
+	grid = affichage_grille(root)
+	root.mainloop()
+	root.quit()
