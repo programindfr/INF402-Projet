@@ -52,6 +52,9 @@ make run
 
 # Exécutable CLI
 ./dist/takuzu input-file
+
+# Tests CLI
+./dist/test
 ```
 
 ## Organisation
