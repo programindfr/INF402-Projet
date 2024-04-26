@@ -34,6 +34,8 @@ Un environnement virtuel python est créé, préservant ainsi votre configuratio
 
 - minisat
 
+- valgrind (optionnel)
+
 ```bash
 make build
 ```

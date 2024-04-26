@@ -191,14 +191,14 @@ main(int argc, char *argv[])
 	
 
 	// Ouverture et lecture des fichiers
-	snprintf(file, 256, "%s.takuzu", argv[1]);
+	snprintf(file, sizeof(file), "%s.takuzu", argv[1]);
 	FILE *inputTakuzu = fopen(file, "r");
 	if (inputTakuzu == NULL) {			// Erreur d'ouverture du fichier
 		usage(argv[0]);
 		exit(EXIT_FAILURE);
 	}
 	
-	snprintf(file, 256, "%s.dimacs", argv[1]);
+	snprintf(file, sizeof(file), "%s.dimacs", argv[1]);
 	FILE *outputDimacs = fopen(file, "w");
 	if (outputDimacs == NULL) {			// Erreur d'ouverture du fichier
 		usage(argv[0]);
@@ -238,17 +238,17 @@ main(int argc, char *argv[])
 	
 
 // Résolution du problème SAT
-	snprintf(satExec, 256, "minisat %s.dimacs %s_sol.dimacs", argv[1], argv[1]);
+	snprintf(satExec, sizeof(satExec), "minisat %s.dimacs %s_sol.dimacs", argv[1], argv[1]);
 	system(satExec);
 	
-	snprintf(file, 256, "%s_sol.takuzu", argv[1]);
+	snprintf(file, sizeof(file), "%s_sol.takuzu", argv[1]);
 	FILE *outputTakuzu = fopen(file, "w");
 	if (outputTakuzu == NULL) {			// Erreur d'ouverture du fichier
 		usage(argv[0]);
 		exit(EXIT_FAILURE);
 	}
 	
-	snprintf(file, 256, "%s_sol.dimacs", argv[1]);
+	snprintf(file, sizeof(file), "%s_sol.dimacs", argv[1]);
 	FILE *inputDimacs = fopen(file, "r");
 	if (inputDimacs == NULL) {			// Erreur d'ouverture du fichier
 		usage(argv[0]);

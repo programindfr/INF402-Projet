@@ -1,5 +1,5 @@
 CC = gcc -Wall -pedantic -O3
-EXEC = takuzu
+EXEC = takuzu test
 SRC = src
 TEST = test
 DIST = dist
@@ -16,7 +16,13 @@ build: all venv
 takuzu: $(addprefix $(DIST)/, takuzu.o regle1.o regle2.o regle3.o stack_t.o)
 	$(CC) $^ -o $(DIST)/takuzu
 
+test: $(addprefix $(DIST)/, test.o regle1.o regle2.o regle3.o stack_t.o)
+	$(CC) $^ -o $(DIST)/test
+
 %/takuzu.o: $(SRC)/takuzu.c
+	$(CC) -c $< -o $@ $(CCFLAGS)
+
+%/test.o: $(SRC)/test.c
 	$(CC) -c $< -o $@ $(CCFLAGS)
 
 %/regle1.o: $(SRC)/regle1.c $(INCLUDE)/regle1.h $(INCLUDE)/stack_t.h
