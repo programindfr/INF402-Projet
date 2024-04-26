@@ -57,6 +57,7 @@ make build
 L'interface graphique permet de générer un fichier takuzu de la grille, puis de chercher un modèle en appelant l'exécutable `takuzu`. Il est aussi possible d'appeler l'exécutable `takuzu` directement depuis le terminal.
 
 > :warning: input-file: nom de fichier takuzu sans l'extension
+> 
 > -s: cherche un modèle via le SAT-solveur
 
 ```bash
