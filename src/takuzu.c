@@ -19,7 +19,12 @@ parametre
 void
 usage(char argv0[])
 {
-	fprintf(stderr, "Usage: %s input-file\n", argv0);
+	fprintf(
+		stderr,
+		"Usage: %s input-file\n\n"
+		"\tinput-file: nom de fichier takuzu sans l'extension\n",
+		argv0
+	);
 }
 
 /*
