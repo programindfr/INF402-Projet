@@ -1,4 +1,4 @@
-### Takuzu
+# Takuzu
 
 Ce projet fonctionne sur les plateformes Linux, les autres plateformes n'ont pas été testées. Le SAT-solveur utilisé par le projet est `minisat`
 
